@@ -1,0 +1,129 @@
+<!doctype html>
+<html>
+<head>
+  <title>Network | Basic usage</title>
+
+  <script type="text/javascript" src="js/vis.js"></script>
+  <link href="vis-network.min.css" rel="stylesheet" type="text/css" />
+
+  <style type="text/css">
+    #mynetwork {
+      width: 1000px;
+      height: 400px;
+      border: 1px solid lightgray;
+    }
+  </style>
+</head>
+<body>
+
+<p>
+  my first vis 
+</p>
+<input type="button" value="刷新" onclick="refresh();">
+
+<div id="mynetwork"></div>
+<pre id="eventSpan"></pre>
+<script type="text/javascript">
+  // create an array with nodes
+  var getData = function (id){
+		debugger;
+		var myData = [
+			{id:"mai",mylabel:"渣男"},
+			{id:"hanabi",mylabel:"渣女"},
+			{id:"shuangmawei",mylabel:"渣男幼驯染"},
+			{id:"hui",mylabel:"女司机"},
+			{id:"xuejie",mylabel:"渣男学姐"},
+			{id:"bus",mylabel:"公交车"},
+			{id:"buschengke1",mylabel:"公交车乘客1"},
+			{id:"buschengke2",mylabel:"公交车乘客2"},
+			{id:"nisang",mylabel:"公交车司机"}
+		]
+		var result = null ;
+		if(null!=id && ""!=id){
+			for(var i= 0 ;i<myData.length ;i++ ){
+				if(myData[i].id==id){
+					result = myData[i].mylabel;
+				}
+			}
+		}
+		return result ;
+	}
+	var nodeIds, shadowState, nodesArray, nodes, edgesArray, edges, network;
+	function startNetwork() {
+	  var DIR = 'img/';
+	  nodesArray = [
+		{id:'mai',title:'渣男', shape: 'circularImage', image: DIR + 'mai.jpg'},
+		{id:'hanabi' , mylabel: '渣女',shape: 'circularImage', image: DIR + 'hanabi.jpg'},
+		{id:'shuangmawei' , mylabel: '渣男幼驯染',shape: 'circularImage', image: DIR + 'shuangmawei.jpg'},
+		{id:'hui' , mylabel: '渣女姬友',shape: 'circularImage', image: DIR + 'hui.jpg'},
+		{id:'xuejie' , mylabel: '渣男学姐',shape: 'circularImage', image: DIR + 'xuejie.jpg'},
+		{id:'bus' , mylabel: '公交车',shape: 'circularImage', image: DIR + 'bus.jpg',color: 'pink'},
+		{id:'buschengke1' , mylabel: '公交车乘客1',shape: 'circularImage', image: DIR + 'missing.jpg'},
+		{id:'buschengke2' , mylabel: '公交车乘客2',shape: 'circularImage', image: DIR + 'missing.jpg'},
+		{id:'nisang' , mylabel: '公交车司机',shape: 'circularImage',borderWidth:10, image: DIR + 'nisang.jpg',color:{background:'#F03967',border:'rgb(0,255,140)' ,highlight:{background:'red',border:'green'}}},
+	  ];
+	  nodes = new vis.DataSet(nodesArray);
+	  // create an array with edges
+	  edgesArray = [
+		{from:'mai' , to:'hanabi' ,arrows:'to'},
+		{from:'hanabi' , to:'mai' ,arrows:'to'},
+		{from:'shuangmawei', to:'mai' ,arrows:'to'},
+		{from:'hanabi' , to:'hui' ,arrows:'to'},
+		{from:'hui' , to:'hanabi' ,arrows:'to'},
+		{from:'xuejie' , to:'mai' ,arrows:'to'},
+		{from:'mai' , to:'xuejie' ,arrows:'to'},
+		{from:'buschengke1' , to:'bus' ,arrows:'to'},
+		{from:'buschengke2' , to:'bus' ,arrows:'to'},
+		{from:'nisang' , to:'bus' ,arrows:'to',color:'pink'},
+		{from:'mai' , to:'bus' ,arrows:'to'},
+		{from:'bus' , to:'nisang' ,arrows:'to',color:'rgb(0,255,140)'},
+		{from:'hanabi' , to:'nisang',arrows:'to' }
+	  ];
+	  edges = new vis.DataSet(edgesArray);
+	  // create a network
+	  var container = document.getElementById('mynetwork');
+	  var data = {
+		nodes: nodes,
+		edges: edges
+	  };
+	  var options = {};
+	  network = new vis.Network(container, data, options);
+	network.on("click", function (params) {
+		debugger;
+		var id = params.nodes[0];
+		var str = getData(id);
+        params.event = "[original event]";
+		
+		if(null != str &&"" !=str){
+			document.getElementById('eventSpan').innerHTML = '<h2>Click event:</h2>' + str;
+		}
+    });
+   
+   network.on("doubleClick", function (params) {
+		var size = params.nodes.length;
+		var id ;
+		if(size ==1){
+			id = params.nodes[0];
+			var newId1 = (Math.random() * 1e7).toString(32);
+			var newId2 = (Math.random() * 1e7).toString(32);
+			var newId3 = (Math.random() * 1e7).toString(32);
+        nodes.add({id:newId1, label:"新乘客"});
+		nodes.add({id:newId2, label:"新乘客"});
+		nodes.add({id:newId3, label:"新乘客"});
+		edges.add({from:newId1 , to:id,arrows:'to' });
+		edges.add({from:newId2, to:id,arrows:'to' });
+		edges.add({from:newId3 , to:id,arrows:'to' });
+		}
+   });
+    }
+ 
+  startNetwork();
+  var refresh = function(){
+	startNetwork();
+  };
+  
+</script>
+
+
+</body>
+</html>

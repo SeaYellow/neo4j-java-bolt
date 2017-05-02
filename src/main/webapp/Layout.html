@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Electric Demo</title>
+	<link href="bootstrap/css/bootstrap-theme.css" rel="stylesheet">
+	<link href="bootstrap/css/bootstrap.css" rel="stylesheet">
+	<link rel="stylesheet" href="loader/fakeLoader.css">
+
+    <script type="text/javascript" src="js/jquery-easyui-1.5.1/jquery.min.js"></script>
+	<script type="text/javascript" src="loader/fakeLoader.min.js"></script>
+    <script src="js/vis.js"></script>
+	<script src="js/visUtil.js"></script>
+
+	<link href="js/vis.min.css" rel="stylesheet" type="text/css"/>
+    <script type="text/javascript" src="js/initData.js"></script>
+    <script type="text/javascript" src="js/demo.js"></script>
+	
+    <style type="text/css">
+    body, select {
+        font: 10pt sans;
+    }
+	.vis-label{
+		width:50px;
+	}
+    #network {
+        position:relative;
+        width: 100%;
+        height: 400px;
+        border: 1px solid lightgray;
+		background-color: #f5f5f5;
+    }
+	#pmsNetwork {
+		position:relative;
+		width: 100%;
+		height: 400px;
+		border: 1px solid lightgray;
+		background-color: #f5f5f5;
+	}
+	#cNetwork{
+		position:relative;
+		width: 100%;
+		height: 400px;
+		border: 1px solid lightgray;
+		background-color: #f5f5f5;
+	}
+    div.table_content {
+        width:80px;
+        text-align:center;
+    }
+    div.table_description {
+        width:100px;
+    }
+
+    #operation {
+        font-size:28px;
+    }
+    #network-popUp {
+        display:none;
+        position:absolute;
+        top:350px;
+        left:170px;
+        z-index:299;
+        width:250px;
+        height:120px;
+        padding:10px;
+        text-align: center;
+    }
+    </style>
+</head>
+<body >
+<div class="container">
+	<div class="row clearfix">
+		<div class="col-md-12 column">
+			<div id="errorMsg" class="alert alert-warning alert-dismissable" style="display: none">
+				<button type="button" class="close" data-dismiss="alert" aria-hidden="true" onclick="closeMsg()">×</button>
+				<h4>
+					注意!
+				</h4>
+				<strong>请填写变电站名称</strong>
+			</div>
+			<nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+				<div class="navbar-header">
+					 <a class="navbar-brand" href="#">查询框</a>
+				</div>
+				<input type="hidden" id="subNameId" name="subName">
+				<div class="collapse navbar-collapse " id="bs-example-navbar-collapse-1">
+					<div class="navbar-form navbar-left">
+						<input class="form-control" placeholder="请输入变电站名称" type="text" id="electricity" name="electricity" onkeydown="getKey();">
+						<input class="btn btn-default" type="button" value="查询" onclick="restart();">
+						<input class="btn btn-default" type="button" value="差异分析" onclick="difAnalysis()">
+						<input class="btn btn-default" type="button" value="跨系统匹配" onclick="combine()">
+						<select id="diff_type" onchange="diffSelect();" class="form-control">
+							<option value ="none">请选择显示差异类型</option>
+							<option value ="all">全部</option>
+							<option value ="2">编号相同，名称不同</option>
+							<option value ="3">仅销售</option>
+							<option value="4">仅生产</option>
+							<option value="5">同一编号有大于2条数据</option>
+							<option value="6">编号相同，名称相同，线路相同</option>
+							<option value="7">编号相同，名称相同，线路不同</option>
+							<option value="8">编号不同，名称相同，线路相同</option>
+							<option value="9">编号不同，名称相同，线路不同</option>
+						</select>
+						<a class="btn btn-default"  onclick="exportDiffCsv()">数据导出</a>
+						<input class="btn btn-default" type="button" value="样例" onclick="window.location.href='demo.html'">
+					</div>
+				</div>
+			</nav>
+			<div  class="row clearfix">
+				<div style="width:80%;float: left;">
+					<div class="col-md-8 column" style="width: 50%">
+						<div id="network" ></div>
+					</div>
+					<div class="col-md-8 column" style="width: 50%">
+						<div id="pmsNetwork" ></div>
+					</div>
+					<div class="col-md-10 column" style="width: 100%">
+						<div id="cNetwork" ></div>
+					</div>
+
+				</div>
+				<div style="width: 18%;float: left;">
+					<div class="col-md-4 column" style="width: 100%">
+						<pre id="eventSpan"></pre>
+					</div>
+				</div>
+
+				</br>
+
+			</div>
+		</div>
+	</div>
+</div>
+<div id="network-popUp">
+    <span id="operation">node</span> <br>
+    <table style="margin:auto;"><tr>
+        <td>id</td><td><input id="node-id" value="new value" /></td>
+    </tr>
+        <tr>
+            <td>label</td><td><input id="node-label" value="new value" /></td>
+        </tr></table>
+    <input type="button" value="save" id="saveButton" />
+    <input type="button" value="cancel" id="cancelButton" />
+</div>
+<div id='weChatMask' onclick="hideWeChat();" style="display:none">
+
+</div>
+<br />
+</body>
+</html>
